@@ -4,17 +4,13 @@ const {Pool} = require('pg');
 const dotenv = require('dotenv');
 
 dotenv.config();
+console.log();
 
 
 const pool = new Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'pos_kinder',
-    password: 'xpsm1530',
-    port: 5432,
+    connectionString: process.env.DATABASE_URL
 })
 
-console.log(pool)
 
 pool.on('connect', () => {
     console.log('Connected to de DB!')
@@ -36,7 +32,7 @@ const crearTablaUsuarios = () => {
         );`
       pool.query(queryText)
       .then((res)=>{
-          console.log(res);
+          console.log("Tabla usuarios -> OK");
           pool.end();
       })
       .catch((err)=>{
@@ -50,3 +46,5 @@ const crearTablaUsuarios = () => {
 module.exports = {
     crearTablaUsuarios
 }
+
+require('make-runnable');
