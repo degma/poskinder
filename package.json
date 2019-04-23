@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/degma/poskinder/issues"
   },
-  "homepage": "https://github.com/degma/poskinder#readme"
+  "homepage": "https://github.com/degma/poskinder#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "dotenv": "^7.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^7.10.0"
+  }
 }
