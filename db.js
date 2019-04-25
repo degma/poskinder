@@ -49,8 +49,7 @@ const crearTablaArticulos = async () => {
             "id" BIGSERIAL PRIMARY KEY,
             "nombre" varchar,
             "descripcion" varchar,
-            "id_fabricante" int,
-            "id_art_generos" int,
+            "id_fabricante" int,            
             "id_categoria" int,
             "tags" varchar[],
             "estado" varchar,
@@ -296,7 +295,7 @@ const crearTablaPrecios = async () => {
 const crearIndices = async () => {
     const queryText = 
     `ALTER TABLE "articulos" ADD FOREIGN KEY ("id_fabricante") REFERENCES "fabricantes" ("id");
-    ALTER TABLE "articulos" ADD FOREIGN KEY ("id_art_generos") REFERENCES "art_genero" ("id");
+    
     ALTER TABLE "articulos" ADD FOREIGN KEY ("id_categoria") REFERENCES "categorias" ("id");
     ALTER TABLE "articulos" ADD FOREIGN KEY ("id_usuario") REFERENCES "usuarios" ("id");
     ALTER TABLE "variantes" ADD FOREIGN KEY ("id_articulo") REFERENCES "articulos" ("id");
