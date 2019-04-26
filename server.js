@@ -57,6 +57,8 @@ app.delete('/api/v1/talle/:id', Auth.verifyToken, Talle.eliminar);
 //crear, eliminar
 app.post('/api/v1/articulo', Auth.verifyToken, Articulo.crear);
 app.put('/api/v1/articulo/:id', Auth.verifyToken, Articulo.editar);
+app.get('/api/v1/articulo/:id', Auth.verifyToken, Articulo.getOne);
+app.get('/api/v1/articulo/', Auth.verifyToken, Articulo.getAll);
 app.delete('/api/v1/articulo/:id', Auth.verifyToken, Articulo.eliminar);
 
 //Stock

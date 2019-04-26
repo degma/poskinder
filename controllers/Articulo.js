@@ -49,25 +49,55 @@ const Articulo = {
    * @param {object} res
    * @returns {object} reflection object 
    */
-  async get(req, res) {
-    const getQuery = `SELECT art.id, art.nombre, art.descripcion, f.nombre, c.nombre, art.tags, art.estado, art.fecha_creado, art.fecha_modificado, u.nombre FROM articulos art
+
+  async getOne(req, res) {
+    const getQuery = `SELECT art.id, art.nombre, art.descripcion, f.nombre, c.nombre, art.tags, art.estado, art.fecha_creado, art.fecha_modificado, u.nombre, g.nombre as "genero" FROM articulos art
                         INNER JOIN fabricantes f ON f.id = art.id_fabricante
                         INNER JOIN categorias c ON c.id = art.id_categoria
                         INNER JOIN usuarios u ON u.id = art.id_usuario
+                        INNER JOIN art_genero ag ON ag.id_articulo = art.id
+                        INNER JOIN generos g ON g.id  = ag.id_genero
                         where art.id = $1`
     try {
-      const { rows } = await db.query(createQuery, values);
-      console.log("Articulo insertado OK! id:" + rows[0].id);
-      //Agrego los generos
-      let query = req.body.id_genero.reduce((txt, genero) => {
-        genero = "INSERT INTO art_genero(id_articulo, id_genero) values (" + rows[0].id + " , " + genero + "); "
-        return txt + genero
-      }, "");
-      await db.queryRaw(query);
-      return res.status(201).send(rows[0]);
+      const { rows} = await db.query(getQuery, [req.params.id]);            
+      console.log( rows.map(genero => genero.genero))
+      rows[0].genero = rows.map(genero => genero.genero)
+      
+      return res.status(201).send(rows[0] );
     } catch (error) {
       return res.status(400).send(error);
     }
+  },
+/**
+   * Traer Articulos
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getAll(req, res) {
+    const getQuery = `SELECT art.id, art.nombre, art.descripcion, f.nombre, c.nombre, art.tags, art.estado, art.fecha_creado, art.fecha_modificado, u.nombre, g.nombre as "genero" FROM articulos art
+                        INNER JOIN fabricantes f ON f.id = art.id_fabricante
+                        INNER JOIN categorias c ON c.id = art.id_categoria
+                        INNER JOIN usuarios u ON u.id = art.id_usuario
+                        INNER JOIN art_genero ag ON ag.id_articulo = art.id
+                        INNER JOIN generos g ON g.id  = ag.id_genero
+                        where art.estado = 'activo'`
+    try {
+      const { rows} = await db.query(getQuery);
+      
+      
+      console.log( rows.map(genero => genero.genero))
+      rows[0].genero = rows.map(genero => genero.genero)
+      
+      return res.status(201).send(rows);
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  },
+  async traerGeneros(id_art) {
+    
+    return getGeneros
   },
 
   /**

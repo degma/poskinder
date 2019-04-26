@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
@@ -5,6 +6,11 @@ dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
+});
+
+const sequelize = new Sequelize(process.env.DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
+  // gimme postgres, please!
+  dialect: 'postgres'
 });
 
 export default {
@@ -15,9 +21,10 @@ export default {
    * @returns {object} object 
    */
   query(text, params) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {    
       pool.query(text, params)
-        .then((res) => {          
+        .then((res) => {
+        
           resolve(res);
         })
         .catch((err) => {
