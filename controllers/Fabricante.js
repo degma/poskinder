@@ -62,6 +62,36 @@ const FabricanteController = {
     })
     .catch( error => res.status(400).json(error))
        
+  },
+  /**
+   * Traer Articulo
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getOne(req, res) {
+    Fabricante.findOne({
+      where:{id: req.params.id}})
+    .then( fabricante => {
+      return res.status(200).json(fabricante)
+    })
+    .catch(error => {return res.status(400).json(error.name)})
+  },
+/**
+   * Traer Articulos
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getAll(req, res) {
+    Fabricante.findAll()
+    .then(fabricantes => {
+      return res.status(200).json(fabricantes)
+    })
+    .catch(error => { return res.status(400).json(error.name)})
+
   }
 };
 

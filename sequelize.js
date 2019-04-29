@@ -69,5 +69,6 @@ module.exports = {
     ListaPrecio,
     Precio,
     MovimientoStock,
-    Fabricante
+    Fabricante,
+    ArticuloGenero
 }

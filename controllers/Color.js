@@ -62,6 +62,36 @@ const ColorController = {
     })
     .catch( error => res.status(400).json(error))
        
+  },
+  /**
+   * Traer Articulo
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getOne(req, res) {
+    Color.findOne({
+      where:{id: req.params.id}})
+    .then( color => {
+      return res.status(200).json(color)
+    })
+    .catch(error => {return res.status(400).json(error.name)})
+  },
+/**
+   * Traer Articulos
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getAll(req, res) {
+    Color.findAll()
+    .then(color => {
+      return res.status(200).json(color)
+    })
+    .catch(error => { return res.status(400).json(error.name)})
+
   }
 };
 

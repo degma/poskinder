@@ -62,6 +62,36 @@ const TalleController = {
     })
     .catch( error => res.status(400).json(error))
        
+  },
+  /**
+   * Traer Articulo
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getOne(req, res) {
+    Talle.findOne({
+      where:{id: req.params.id}})
+    .then( talle => {
+      return res.status(200).json(talle)
+    })
+    .catch(error => {return res.status(400).json(error.name)})
+  },
+/**
+   * Traer Articulos
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getAll(req, res) {
+    Talle.findAll()
+    .then(talles => {
+      return res.status(200).json(talles)
+    })
+    .catch(error => { return res.status(400).json(error.name)})
+
   }
 };
 

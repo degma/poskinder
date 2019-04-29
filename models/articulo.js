@@ -5,9 +5,12 @@ module.exports = (sequelize, type) => {
           primaryKey: true,
           autoIncrement: true
         },
-        name: type.STRING,
+        nombre: type.STRING,
         descripcion: type.STRING,
         tags: type.ARRAY(type.STRING),        
-        activo: type.BOOLEAN
+        activo: {
+        defaultValue: true,
+        type: type.BOOLEAN
+        }
     })
 }

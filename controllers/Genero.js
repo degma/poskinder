@@ -62,6 +62,36 @@ const GeneroController = {
     })
     .catch( error => res.status(400).json(error))
        
+  },
+  /**
+   * Traer Articulo
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getOne(req, res) {
+    Genero.findOne({
+      where:{id: req.params.id}})
+    .then( genero => {
+      return res.status(200).json(genero)
+    })
+    .catch(error => {return res.status(400).json(error.name)})
+  },
+/**
+   * Traer Articulos
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getAll(req, res) {
+    Genero.findAll()
+    .then(generos => {
+      return res.status(200).json(generos)
+    })
+    .catch(error => { return res.status(400).json(error.name)})
+
   }
 };
 

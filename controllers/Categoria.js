@@ -61,7 +61,38 @@ const CategoriaController = {
     })
     .catch( error => res.status(400).json(error))
        
+  },
+  /**
+   * Traer Articulo
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getOne(req, res) {
+    Categoria.findOne({
+      where:{id: req.params.id}})
+    .then( categoria => {
+      return res.status(200).json(categoria)
+    })
+    .catch(error => {return res.status(400).json(error.name)})
+  },
+/**
+   * Traer Articulos
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getAll(req, res) {
+    Categoria.findAll()
+    .then(categorias => {
+      return res.status(200).json(categorias)
+    })
+    .catch(error => { return res.status(400).json(error.name)})
+
   }
+
 };
 
 export default CategoriaController;

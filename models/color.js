@@ -10,5 +10,11 @@ module.exports = (sequelize, type) => {
           defaultValue: true,
           type: type.BOOLEAN
         }
+    },
+    {
+      name: {
+        singular: 'color',
+        plural: 'colores',
+      },
     })
 }
