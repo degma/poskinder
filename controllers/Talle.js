@@ -1,59 +1,68 @@
-import db from '../db/index';
+import { Talle } from "../sequelize";
 
-const Talle = {
+const TalleController = {
   /**
    * Create A User
-   * @param {object} req 
+   * @param {object} req
    * @param {object} res
-   * @returns {object} reflection object 
+   * @returns {object} reflection object
    */
   async crear(req, res) {
     if (!req.body.nombre) {
-      return res.status(400).send({'message': 'El campo NOMBRE es obligatorio'});
+      return res
+        .status(400)
+        .send({ message: "El campo NOMBRE es obligatorio." });
     }
-    
-    const createQuery = `INSERT INTO
-      talles(nombre, grupo_talle, fecha_creado)
-      VALUES($1, $2, $3)
-      returning *`;
-    
-    const values = [
-      req.body.nombre,
-      req.body.grupo_talle || null,
-      new Date().toISOString()      
-    ];
-    console.log(values)
+    req.body.usuarioId = req.user.id
 
-    try {            
-      const { rows } = await db.query(createQuery, values);
-      console.log("Categoria insertado OK! id:" + rows[0].nombre);      
-      return res.status(201).send( rows[0]);
-    } catch(error) {
-      console.log(error)      
-      return res.status(400).send(error);
-    }
+    Talle.create(req.body)
+      .then(talle => {
+        console.log(req.user.id)
+        res.status(200).json(talle);
+      })
+      .catch(error =>
+        res.status(400).json({ message: "Error en la creación." })
+      );
   },
   /**
-   * Login
-   * @param {object} req 
+   * Eliminar Talle
+   * @param {object} req
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} user object
    */
-  
+
   async eliminar(req, res) {
     
-    const deleteQuery = 'DELETE FROM talles WHERE id=$1 returning *';
-    try {
-      const { rows } = await db.query(deleteQuery, [req.params.id]);
-      if(!rows[0]) {
-        return res.status(404).send({'message': 'no existe esa categoría'});
+    Talle.update(
+      {activo: false,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}
+    )
+    .then( talle => {
+      if (talle[0]==0){
+        return res.status(400).json({"message":"Talle inexistente"})
       }
-      // AGREGAR if PARA VERIFICAR QUE NO EXISTAN ARTICULOS ASOCIADOS A LA CATEGORIA A BORRAR
-      return res.status(204).send({ 'message': 'deleted' });
-    } catch(error) {
-      return res.status(400).send(error);
-    }
+      return res.status(200).json(talle[1][0])})
+    .catch( error => res.status(400).json(error))
+       
+  },
+  async editar(req, res) {
+    
+    Talle.update(
+      {nombre: req.body.nombre,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}      
+    )
+    .then( talle => {
+      if (talle[0]==0){
+        console.log(talle[0])
+        return res.status(400).json({"message":"Categoría inexistente."})
+      }
+      return res.status(200).json(talle[1][0])
+    })
+    .catch( error => res.status(400).json(error))
+       
   }
-}
+};
 
-export default Talle;
+export default TalleController;

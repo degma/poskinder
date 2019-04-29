@@ -1,6 +1,7 @@
 import db from '../db/index';
+import Usuario from '../models/usuario';
 
-const Articulo = {
+const ArticuloController = {
   /**
    * Create A User
    * @param {object} req 
@@ -186,4 +187,4 @@ const Articulo = {
   }
 }
 
-export default Articulo;
+export default ArticuloController;

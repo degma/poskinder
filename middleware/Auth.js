@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import db from '../db/index';
+import {Usuario} from '../sequelize';
+import { decode } from 'punycode';
 
 const Auth = {
     /**
@@ -15,20 +17,23 @@ const Auth = {
         if (!token) {
             return res.status(400).send({ 'message': 'Token is not provided' });
         }
-        try {            
-            const decoded = await jwt.verify(token, process.env.SECRET);            
-            const text = 'SELECT * FROM usuarios WHERE id = $1';        
-            const { rows } = await db.query(text, [decoded.userId]);            
-            if (!rows[0]) {
-                return res.status(400).send({ 'message': 'The token you provided is invalid' });
+
+        const decoded = await jwt.verify(token, process.env.SECRET);
+        Usuario.findOne({where:{ id: decoded.userId}})            
+        .then(usuario => {
+            if (!usuario) {
+                return res.status(400).json({"message":"Token invalido."})
             }
             req.user = { id: decoded.userId };
+            console.log ("[ TOKEN VALIDADO ]")
             console.log(req.user)
-            next();            
-        } catch (error) {
-            console.log(error);
-            return res.status(400).send(error);
-        }
+            next();
+        })
+        .catch( error => {
+            console.log ("------------------ TOKEN ----------------------")
+            console.log (error)
+        })
+        
     }
 }
 

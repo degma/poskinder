@@ -1,62 +1,68 @@
-import db from '../db/index';
+import { Fabricante } from "../sequelize";
 
-const Fabricante = {
+const FabricanteController = {
   /**
    * Create A User
-   * @param {object} req 
+   * @param {object} req
    * @param {object} res
-   * @returns {object} reflection object 
+   * @returns {object} reflection object
    */
   async crear(req, res) {
     if (!req.body.nombre) {
-      return res.status(400).send({'message': 'El campo nombre del fabricante es obligatorio'});
+      return res
+        .status(400)
+        .send({ message: "El campo NOMBRE es obligatorio." });
     }
-    
-    const createQuery = `INSERT INTO
-      fabricantes(nombre, nombre_contacto, telefono, direccion, notas, fecha_creado)
-      VALUES($1, $2, $3, $4, $5, $6)
-      returning *`;
-    
-    const values = [
-      req.body.nombre, 
-      req.body.nombre_contacto || null, 
-      req.body.telefono || null, 
-      req.body.direccion || null, 
-      req.body.notas || null,
-      new Date().toISOString()      
-    ];
-    console.log(values)
+    req.body.usuarioId = req.user.id
 
-    try {            
-      const { rows } = await db.query(createQuery, values);
-      console.log("Categoria insertado OK! id:" + rows[0].nombre);      
-      return res.status(201).send( rows[0]);
-    } catch(error) {
-      console.log(error)      
-      return res.status(400).send(error);
-    }
+    Fabricante.create(req.body)
+      .then(fabricante => {
+        console.log(req.user.id)
+        res.status(200).json(fabricante);
+      })
+      .catch(error =>
+        res.status(400).json({ message: "Error en la creación." })
+      );
   },
   /**
-   * Login
-   * @param {object} req 
+   * Eliminar Fabricante
+   * @param {object} req
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} user object
    */
-  
+
   async eliminar(req, res) {
     
-    const deleteQuery = 'DELETE FROM fabricantes WHERE id=$1 returning *';
-    try {
-      const { rows } = await db.query(deleteQuery, [req.params.id]);
-      if(!rows[0]) {
-        return res.status(404).send({'message': 'no existe esa categoría'});
+    Fabricante.update(
+      {activo: false,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}
+    )
+    .then( fabricante => {
+      if (fabricante[0]==0){
+        return res.status(400).json({"message":"Fabricante inexistente"})
       }
-      // AGREGAR if PARA VERIFICAR QUE NO EXISTAN ARTICULOS ASOCIADOS A LA CATEGORIA A BORRAR
-      return res.status(204).send({ 'message': 'deleted' });
-    } catch(error) {
-      return res.status(400).send(error);
-    }
+      return res.status(200).json(fabricante[1][0])})
+    .catch( error => res.status(400).json(error))
+       
+  },
+  async editar(req, res) {
+    
+    Fabricante.update(
+      {nombre: req.body.nombre,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}      
+    )
+    .then( fabricante => {
+      if (fabricante[0]==0){
+        console.log(fabricante[0])
+        return res.status(400).json({"message":"Categoría inexistente."})
+      }
+      return res.status(200).json(fabricante[1][0])
+    })
+    .catch( error => res.status(400).json(error))
+       
   }
-}
+};
 
-export default Fabricante;
+export default FabricanteController;

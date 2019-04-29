@@ -1,14 +1,14 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('categoria', {
+    return sequelize.define('talle', {
         id: {
           type: type.INTEGER,
           primaryKey: true,
           autoIncrement: true
         },
-        nombre: type.STRING,        
+        nombre: type.STRING,
         activo: {
-         type: type.BOOLEAN,
-         defaultValue: true,
+          defaultValue: true,
+          type: type.BOOLEAN
         }
     })
 }

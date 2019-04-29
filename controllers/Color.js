@@ -1,58 +1,68 @@
-import db from '../db/index';
+import { Color } from "../sequelize";
 
-const Color = {
+const ColorController = {
   /**
    * Create A User
-   * @param {object} req 
+   * @param {object} req
    * @param {object} res
-   * @returns {object} reflection object 
+   * @returns {object} reflection object
    */
   async crear(req, res) {
     if (!req.body.nombre) {
-      return res.status(400).send({'message': 'Verificar que no falten datos'});
+      return res
+        .status(400)
+        .send({ message: "El campo NOMBRE es obligatorio." });
     }
-    
-    const createQuery = `INSERT INTO
-      colores(nombre, fecha_creado)
-      VALUES($1, $2)
-      returning *`;
-    
-    const values = [
-      req.body.nombre,
-      new Date().toISOString()      
-    ];
-    console.log(values)
+    req.body.usuarioId = req.user.id
 
-    try {            
-      const { rows } = await db.query(createQuery, values);
-      console.log("Categoria insertado OK! id:" + rows[0].nombre);      
-      return res.status(201).send( rows[0]);
-    } catch(error) {
-      console.log(error)      
-      return res.status(400).send(error);
-    }
+    Color.create(req.body)
+      .then(color => {
+        console.log(req.user.id)
+        res.status(200).json(color);
+      })
+      .catch(error =>
+        res.status(400).json({ message: "Error en la creación." })
+      );
   },
   /**
-   * Login
-   * @param {object} req 
+   * Eliminar Color
+   * @param {object} req
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} user object
    */
-  
-  async eliminar(req, res) {
-    console.log(req);
-    const deleteQuery = 'DELETE FROM colores WHERE id=$1 returning *';
-    try {
-      const { rows } = await db.query(deleteQuery, [req.params.id]);
-      if(!rows[0]) {
-        return res.status(404).send({'message': 'no existe esa categoría'});
-      }
-      // AGREGAR if PARA VERIFICAR QUE NO EXISTAN ARTICULOS ASOCIADOS A LA CATEGORIA A BORRAR
-      return res.status(204).send({ 'message': 'deleted' });
-    } catch(error) {
-      return res.status(400).send(error);
-    }
-  }
-}
 
-export default Color;
+  async eliminar(req, res) {
+    
+    Color.update(
+      {activo: false,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}
+    )
+    .then( color => {
+      if (color[0]==0){
+        return res.status(400).json({"message":"Color inexistente"})
+      }
+      return res.status(200).json(color[1][0])})
+    .catch( error => res.status(400).json(error))
+       
+  },
+  async editar(req, res) {
+    
+    Color.update(
+      {nombre: req.body.nombre,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}      
+    )
+    .then( color => {
+      if (color[0]==0){
+        console.log(color[0])
+        return res.status(400).json({"message":"Categoría inexistente."})
+      }
+      return res.status(200).json(color[1][0])
+    })
+    .catch( error => res.status(400).json(error))
+       
+  }
+};
+
+export default ColorController;

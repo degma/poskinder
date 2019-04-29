@@ -3,13 +3,13 @@ import dotenv from 'dotenv';
 import "@babel/polyfill";
 import Auth from './middleware/Auth';
 
-import Usuario from './controllers/Usuario';
-import Categoria from './controllers/Categoria';
-import Color from './controllers/Color';
-import Fabricante from './controllers/Fabricante';
-import Genero from './controllers/Genero';
-import Talle from './controllers/Talle';
-import Articulo from './controllers/Articulo';
+import UsuarioController from './controllers/Usuario';
+import CategoriaController from './controllers/Categoria';
+import ColorController from './controllers/Color';
+import FabricanteController from './controllers/Fabricante';
+import GeneroController from './controllers/Genero';
+import TalleController from './controllers/Talle';
+import ArticuloController from './controllers/Articulo';
 
 dotenv.config();
 
@@ -28,38 +28,41 @@ app.get('/', (req, res) => {
 // app.delete('/api/v1/reflections/:id', Auth.verifyToken, Reflection.delete);
 
 //usuarios
-app.post('/api/v1/users', Usuario.crear);
-app.post('/api/v1/users/login',Usuario.login);
-app.delete('/api/v1/users/me', Auth.verifyToken, Usuario.delete);
+app.post('/api/v1/usuario', UsuarioController.crear);
+app.post('/api/v1/usuario/login',UsuarioController.login);
+app.delete('/api/v1/usuario/me', Auth.verifyToken, UsuarioController.delete);
 
 //categorias
-app.post('/api/v1/categoria', Auth.verifyToken, Categoria.crear);
-app.delete('/api/v1/categoria/:id', Auth.verifyToken, Categoria.eliminar);
+app.post('/api/v1/categoria', Auth.verifyToken, CategoriaController.crear);
+app.put('/api/v1/categoria/:id', Auth.verifyToken, CategoriaController.editar);
+app.delete('/api/v1/categoria/:id', Auth.verifyToken, CategoriaController.eliminar);
 
 //colores
-app.post('/api/v1/color', Auth.verifyToken, Color.crear);
-app.delete('/api/v1/color/:id', Auth.verifyToken, Color.eliminar);
+app.post('/api/v1/color', Auth.verifyToken, ColorController.crear);
+app.put('/api/v1/color/:id', Auth.verifyToken, ColorController.editar);
+app.delete('/api/v1/color/:id', Auth.verifyToken, ColorController.eliminar);
 
 //fabricantes
-app.post('/api/v1/fabricante', Auth.verifyToken, Fabricante.crear);
-app.delete('/api/v1/fabricante/:id', Auth.verifyToken, Fabricante.eliminar);
+app.post('/api/v1/fabricante', Auth.verifyToken, FabricanteController.crear);
+app.put('/api/v1/fabricante/:id', Auth.verifyToken, FabricanteController.editar);
+app.delete('/api/v1/fabricante/:id', Auth.verifyToken, FabricanteController.eliminar);
 
 //generos
-app.post('/api/v1/genero', Auth.verifyToken, Genero.crear);
-app.delete('/api/v1/genero/:id', Auth.verifyToken, Genero.eliminar);
+app.post('/api/v1/genero', Auth.verifyToken, GeneroController.crear);
+app.delete('/api/v1/genero/:id', Auth.verifyToken, GeneroController.eliminar);
 
 //talles
-app.post('/api/v1/talle', Auth.verifyToken, Talle.crear);
-app.delete('/api/v1/talle/:id', Auth.verifyToken, Talle.eliminar);
+app.post('/api/v1/talle', Auth.verifyToken, TalleController.crear);
+app.delete('/api/v1/talle/:id', Auth.verifyToken, TalleController.eliminar);
 
 
 //articulos
 //crear, eliminar
-app.post('/api/v1/articulo', Auth.verifyToken, Articulo.crear);
-app.put('/api/v1/articulo/:id', Auth.verifyToken, Articulo.editar);
-app.get('/api/v1/articulo/:id', Auth.verifyToken, Articulo.getOne);
-app.get('/api/v1/articulo/', Auth.verifyToken, Articulo.getAll);
-app.delete('/api/v1/articulo/:id', Auth.verifyToken, Articulo.eliminar);
+app.post('/api/v1/articulo', Auth.verifyToken, ArticuloController.crear);
+app.put('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.editar);
+app.get('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.getOne);
+app.get('/api/v1/articulo/', Auth.verifyToken, ArticuloController.getAll);
+app.delete('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.eliminar);
 
 //Stock
 //crear variantes, track del stock

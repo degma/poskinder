@@ -1,57 +1,68 @@
-import db from '../db/index';
+import { Genero } from "../sequelize";
 
-const Genero = {
+const GeneroController = {
   /**
    * Create A User
-   * @param {object} req 
+   * @param {object} req
    * @param {object} res
-   * @returns {object} reflection object 
+   * @returns {object} reflection object
    */
   async crear(req, res) {
     if (!req.body.nombre) {
-      return res.status(400).send({'message': 'Verificar que no falten datos'});
+      return res
+        .status(400)
+        .send({ message: "El campo NOMBRE es obligatorio." });
     }
-    
-    const createQuery = `INSERT INTO
-      generos(nombre, grupo_talle, fecha_creado)
-      VALUES($1, $2, $3)
-      returning *`;
-    
-    const values = [
-      req.body.nombre,
-      req.body.grupo_talle,
-      new Date().toISOString()      
-    ];
+    req.body.usuarioId = req.user.id
 
-    try {            
-      const { rows } = await db.query(createQuery, values);
-      console.log("Categoria insertado OK! id:" + rows[0].nombre);      
-      return res.status(201).send( rows[0]);
-    } catch(error) {      
-      return res.status(400).send(error);
-    }
+    Genero.create(req.body)
+      .then(genero => {
+        console.log(req.user.id)
+        res.status(200).json(genero);
+      })
+      .catch(error =>
+        res.status(400).json({ message: "Error en la creación." })
+      );
   },
   /**
-   * Login
-   * @param {object} req 
+   * Eliminar Genero
+   * @param {object} req
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} user object
    */
-  
+
   async eliminar(req, res) {
     
-    const deleteQuery = 'DELETE FROM generos WHERE id=$1 returning *';
-    try {
-      const { rows } = await db.query(deleteQuery, [req.params.id]);
-      if(!rows[0]) {
-        return res.status(404).send({'message': 'no existe esa categoría'});
+    Genero.update(
+      {activo: false,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}
+    )
+    .then( genero => {
+      if (genero[0]==0){
+        return res.status(400).json({"message":"Genero inexistente"})
       }
-      // AGREGAR if PARA VERIFICAR QUE NO EXISTAN ARTICULOS ASOCIADOS A LA CATEGORIA A BORRAR
-      return res.status(204).send({ 'message': 'deleted' });
-    } catch(error) {
-      return res.status(400).send(error);
-    }
+      return res.status(200).json(genero[1][0])})
+    .catch( error => res.status(400).json(error))
+       
+  },
+  async editar(req, res) {
+    
+    Genero.update(
+      {nombre: req.body.nombre,
+      usuarioId: req.user.id},
+      {returning: true, where: {"id":req.params.id}}      
+    )
+    .then( genero => {
+      if (genero[0]==0){
+        console.log(genero[0])
+        return res.status(400).json({"message":"Categoría inexistente."})
+      }
+      return res.status(200).json(genero[1][0])
+    })
+    .catch( error => res.status(400).json(error))
+       
   }
-}
+};
 
-export default Genero;
+export default GeneroController;
