@@ -1,4 +1,4 @@
-import { Articulo, Usuario, Categoria, Genero, Fabricante, ArticuloGenero } from '../sequelize'
+import { Articulo, Usuario, Categoria, Genero, Fabricante, ArticuloGenero, ListaPrecio, Precio } from '../sequelize'
 
 const ArticuloController = {
   /**
@@ -8,19 +8,29 @@ const ArticuloController = {
    * @returns {object} reflection object 
    */
   async crear(req, res) {
-    if (!req.body.nombre || !req.body.fabricanteId || !req.body.generoId || !req.body.categoriaId) {
+    if (!req.body.nombre || 
+        !req.body.fabricanteId || 
+        !req.body.generoId || 
+        !req.body.categoriaId ||
+        !req.body.listaprecioId ||
+        !req.body.precio
+        ) {
       return res.status(400).send({ 'message': 'Verificar que no falten datos' });
     }
 
+  
     Articulo.create(req.body)
     .then(articulo => {
-      console.log(articulo)            
-      articulo.addGeneros(req.body.generoId)
+      articulo.addGenero(req.body.generoId)
       .then(() => {                   
-        return res.status(200).json({"message": "articulo agregado ok [id="+articulo.dataValues.id+"]"})
+        articulo.addListaprecio(req.body.listaprecioId,{through:{precio: req.body.precio}})
+        .then(() => {
+          return res.status(200).json({"message": "Articulo agregado correctamente [id="+articulo.dataValues.id+"]"})
+        }
+        )      
       })         
       .catch( error =>  {
-        console.log(error.original)
+        console.log(error)
         return res.status(400).json({"message": error.name})
       })
     })
@@ -54,11 +64,26 @@ const ArticuloController = {
    */
 
   async getAll(req, res) {
-    Articulo.findAll({include: [{model:Genero},{model:Categoria}, {model:Fabricante}, {model:Usuario}]})
+    ListaPrecio.findOne({      
+      where: {activo:true},
+      include: [{
+        model: Articulo,
+        include:[
+          {            
+            model:Genero            
+          },{
+            model:Fabricante
+          },{
+            model:Categoria
+          }
+      ]}]
+    })
     .then(articulos => {
       return res.status(200).json(articulos)
     })
-    .catch(error => { return res.status(400).json(error.name)})
+    .catch(error => { 
+      console.log(error)
+      return res.status(400).json(error.name)})
 
   },
 

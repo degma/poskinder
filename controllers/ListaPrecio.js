@@ -1,6 +1,6 @@
-import { Talle } from "../sequelize";
+import { ListaPrecio } from "../sequelize";
 
-const TalleController = {
+const ListaPrecioController = {
   /**
    * Create A User
    * @param {object} req
@@ -15,17 +15,17 @@ const TalleController = {
     }
     req.body.usuarioId = req.user.id
 
-    Talle.create(req.body)
-      .then(talle => {
+    ListaPrecio.create(req.body)
+      .then(listaprecio => {
         console.log(req.user.id)
-        res.status(200).json(talle);
+        res.status(200).json(listaprecio);
       })
       .catch(error =>
-        res.status(400).json({ message: "Error en la creación." })
+        res.status(400).json({ message: error.name }) 
       );
   },
   /**
-   * Eliminar Talle
+   * Eliminar ListaPrecio
    * @param {object} req
    * @param {object} res
    * @returns {object} user object
@@ -33,32 +33,32 @@ const TalleController = {
 
   async eliminar(req, res) {
     
-    Talle.update(
+    ListaPrecio.update(
       {activo: false,
       usuarioId: req.user.id},
       {returning: true, where: {"id":req.params.id}}
     )
-    .then( talle => {
-      if (talle[0]==0){
-        return res.status(400).json({"message":"Talle inexistente"})
+    .then( listaprecio => {
+      if (listaprecio[0]==0){
+        return res.status(400).json({"message":"Lista de Precio inexistente"})
       }
-      return res.status(200).json(talle[1][0])})
+      return res.status(200).json(listaprecio[1][0])})
     .catch( error => res.status(400).json(error))
        
   },
   async editar(req, res) {
     
-    Talle.update(
+    ListaPrecio.update(
       {nombre: req.body.nombre,
       usuarioId: req.user.id},
       {returning: true, where: {"id":req.params.id}}      
     )
-    .then( talle => {
-      if (talle[0]==0){
-        console.log(talle[0])
-        return res.status(400).json({"message":"Talle inexistente."})
+    .then( listaprecio => {
+      if (listaprecio[0]==0){
+        console.log(listaprecio[0])
+        return res.status(400).json({"message":"Categoría inexistente."})
       }
-      return res.status(200).json(talle[1][0])
+      return res.status(200).json(listaprecio[1][0])
     })
     .catch( error => res.status(400).json(error))
        
@@ -71,13 +71,29 @@ const TalleController = {
    */
 
   async getOne(req, res) {
-    Talle.findOne({
+    ListaPrecio.findOne({
       where:{id: req.params.id}})
-    .then( talle => {
-      return res.status(200).json(talle)
+    .then( listaprecio => {
+      return res.status(200).json(listaprecio)
     })
     .catch(error => {return res.status(400).json(error.name)})
   },
+  /**
+   * Traer actual
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} reflection object 
+   */
+
+  async getCurrent(req, res) {
+    ListaPrecio.findOne({
+      where:{activo: true}})
+    .then( listaprecio => {
+      return res.status(200).json(listaprecio)
+    })
+    .catch(error => {return res.status(400).json(error.name)})
+  },
+
 /**
    * Traer Articulos
    * @param {object} req 
@@ -86,13 +102,13 @@ const TalleController = {
    */
 
   async getAll(req, res) {
-    Talle.findAll()
-    .then(talles => {
-      return res.status(200).json(talles)
+    ListaPrecio.findAll()
+    .then(listaprecio => {
+      return res.status(200).json(listaprecio)
     })
     .catch(error => { return res.status(400).json(error.name)})
 
   }
 };
 
-export default TalleController;
+export default ListaPrecioController;

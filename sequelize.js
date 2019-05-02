@@ -37,24 +37,29 @@ const MovimientoStock = MovimientoStockModel(sequelize, Sequelize)
 
 Articulo.belongsToMany(Genero, { through: ArticuloGenero, unique: false })
 Genero.belongsToMany(Articulo, { through: ArticuloGenero, unique: false })
+
+Articulo.belongsToMany(ListaPrecio, {through: Precio, unique: false, foreignKey:'articuloId'});
+ListaPrecio.belongsToMany(Articulo, {through: Precio, unique: false, foreignKey:'listaprecioId'});
+
 Articulo.belongsTo(Usuario);
 Articulo.belongsTo(Fabricante);
 Articulo.belongsTo(Categoria);
+
 MovimientoStock.belongsTo(Usuario);
 MovimientoStock.belongsTo(Variante);
+
 Variante.belongsTo(Articulo);
 Variante.belongsTo(Color);
 Variante.belongsTo(Talle);
-Variante.belongsTo(Usuario);
-Precio.belongsTo(ListaPrecio);
-Precio.belongsTo(Articulo);
+
 Categoria.belongsTo(Usuario);
 Talle.belongsTo(Usuario);
 Color.belongsTo(Usuario);
 Genero.belongsTo(Usuario);
 Precio.belongsTo(Usuario);
+Variante.belongsTo(Usuario);
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
   .then(() => {
     console.log(`Database & tables created!`)
   })
