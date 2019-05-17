@@ -68,7 +68,7 @@ app.delete('/api/v1/talle/:id', Auth.verifyToken, TalleController.eliminar);
 //articulos
 //crear, eliminar
 app.post('/api/v1/articulo',  ArticuloController.crear);
-app.put('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.editar);
+app.put('/api/v1/articulo/', Auth.verifyToken, ArticuloController.editar);
 app.get('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.getOne);
 app.get('/api/v1/articulo/', ArticuloController.getAll);
 app.delete('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.eliminar);
