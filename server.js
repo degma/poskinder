@@ -40,6 +40,7 @@ app.delete('/api/v1/categoria/:id', Auth.verifyToken, CategoriaController.elimin
 //lista precio
 app.post('/api/v1/listaprecio', Auth.verifyToken, ListaPrecioController.crear);
 app.get('/api/v1/listaprecio/current', ListaPrecioController.getCurrent);
+app.get('/api/v1/listaprecio/', ListaPrecioController.getAll);
 app.put('/api/v1/listaprecio/:id', Auth.verifyToken, ListaPrecioController.editar);
 app.delete('/api/v1/listaprecio/:id', Auth.verifyToken, ListaPrecioController.eliminar);
 
