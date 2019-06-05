@@ -66,7 +66,7 @@ const UsuarioController = {
       }
       const token = Helper.generateToken(usuario.id);
       console.log("[" + usuario.email + "] login correcto");
-      return res.status(200).send({ token });
+      return res.status(200).send({ token: token, userId: usuario.id });
     })
     .catch( error => res.status(400).json(error))
     
