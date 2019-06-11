@@ -11,16 +11,19 @@ import ListaPrecioModel from './models/listaprecio'
 import VarianteModel from './models/variante'
 import MovimientoStockModel from './models/movimientostock'
 
-const sequelize = new Sequelize( process.env.DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  dialect: 'postgres',
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-})
+const sequelize = new Sequelize(
+  process.env.DATABASE,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    dialect: 'postgres',
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
+  })
 
 const Usuario = UsuarioModel(sequelize, Sequelize)
 const ArticuloGenero = sequelize.define('articulo_genero', {})
@@ -38,8 +41,8 @@ const MovimientoStock = MovimientoStockModel(sequelize, Sequelize)
 Articulo.belongsToMany(Genero, { through: ArticuloGenero, unique: false })
 Genero.belongsToMany(Articulo, { through: ArticuloGenero, unique: false })
 
-Articulo.belongsToMany(ListaPrecio, {through: Precio, unique: false, foreignKey:'articuloId'});
-ListaPrecio.belongsToMany(Articulo, {through: Precio, unique: false, foreignKey:'listaprecioId'});
+Articulo.belongsToMany(ListaPrecio, { through: Precio, unique: false, foreignKey: 'articuloId' });
+ListaPrecio.belongsToMany(Articulo, { through: Precio, unique: false, foreignKey: 'listaprecioId' });
 
 Articulo.belongsTo(Usuario);
 Articulo.belongsTo(Fabricante);
@@ -65,15 +68,15 @@ sequelize.sync({ force: false })
   })
 
 module.exports = {
-  Usuario,    
-    Articulo,
-    Genero,
-    Categoria,
-    Talle,
-    Color,
-    ListaPrecio,
-    Precio,
-    MovimientoStock,
-    Fabricante,
-    ArticuloGenero
+  Usuario,
+  Articulo,
+  Genero,
+  Categoria,
+  Talle,
+  Color,
+  ListaPrecio,
+  Precio,
+  MovimientoStock,
+  Fabricante,
+  ArticuloGenero
 }

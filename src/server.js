@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import "@babel/polyfill";
 import Auth from './middleware/Auth';
 import cors from 'cors';
-
 import UsuarioController from './controllers/Usuario';
 import CategoriaController from './controllers/Categoria';
 import ColorController from './controllers/Color';
@@ -12,10 +11,8 @@ import GeneroController from './controllers/Genero';
 import TalleController from './controllers/Talle';
 import ArticuloController from './controllers/Articulo';
 import ListaPrecioController from './controllers/ListaPrecio';
-import { getEnabledCategories } from 'trace_events';
 
 dotenv.config();
-
 
 const app = express()
 
@@ -67,7 +64,6 @@ app.delete('/api/v1/talle/:id', Auth.verifyToken, TalleController.eliminar);
 
 
 //articulos
-//crear, eliminar
 app.post('/api/v1/articulo',  ArticuloController.crear);
 app.put('/api/v1/articulo/', Auth.verifyToken, ArticuloController.editar);
 app.get('/api/v1/articulo/:id', Auth.verifyToken, ArticuloController.getOne);
