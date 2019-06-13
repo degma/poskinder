@@ -21,6 +21,7 @@ if (process.env.DATABASE_URL) {
     protocol: 'postgres',    
     logging:  true //false
   })
+  console.log(`Conectado a la BASE DE DATOS ${process.env.DATABASE_URL}`)
 } else {
   // the application is executed on the local machine ... use mysql  
   sequelize = new Sequelize(
@@ -36,6 +37,7 @@ if (process.env.DATABASE_URL) {
         idle: 10000
       }
     })
+    console.log(`Conectado a la BASE DE DATOS ${process.env.DATABASE}`)
 }
 
 
@@ -78,7 +80,7 @@ Variante.belongsTo(Usuario);
 
 sequelize.sync({ force: true })
   .then(() => {
-    console.log(`Database & tables created!`)
+    console.log(`Database ${process.env.DATABASE} => tables created!`)
   })
 
 module.exports = {

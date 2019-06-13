@@ -106,7 +106,7 @@ const FabricanteController = {
      */
 
   async getAll(req, res) {
-    Fabricante.findAll()
+    Fabricante.findAll({where: { activo: true }})
       .then(fabricantes => {
         return res.status(200).json(fabricantes)
       })

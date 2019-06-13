@@ -55,6 +55,7 @@ app.delete('/api/v1/fabricante/:id', Auth.verifyToken, FabricanteController.elim
 
 //generos
 app.post('/api/v1/genero', Auth.verifyToken, GeneroController.crear);
+app.put('/api/v1/genero/:id', Auth.verifyToken, GeneroController.editar);
 app.get('/api/v1/genero', GeneroController.getAll);
 app.delete('/api/v1/genero/:id', Auth.verifyToken, GeneroController.eliminar);
 

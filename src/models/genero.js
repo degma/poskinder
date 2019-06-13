@@ -6,7 +6,11 @@ module.exports = (sequelize, type) => {
           autoIncrement: true
         },
         nombre: type.STRING,
-        activo: type.BOOLEAN
+        descripcion: type.STRING,
+        activo: {
+          type: type.BOOLEAN,
+          defaultValue: true,
+         }
                 
     })
 }

@@ -16,12 +16,11 @@ const CategoriaController = {
     }
     req.body.usuarioId = req.user.id;
     Categoria.create(req.body)
-      .then(categoria => {
-        console.log(req.user.id);
-        res.status(200).json(categoria);
+      .then(categoria => {      
+        return res.status(200).json(categoria);
       })
       .catch(error =>
-        res.status(400).json({ message: "Error en la creación." })
+        res.status(400).json({ message: error })
       );
   },
   /**
