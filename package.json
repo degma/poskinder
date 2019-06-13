@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev-start": "babel-watch src/server.js",
-    "start": "babel-node src/server.js",
-    "build": "babel src --out-dir dist",
-    "serve": "node dist/server.js"
+    "build-babel": "babel -d ./build ./src -s",
+    "clean": "rm -rf build && mkdir build",
+    "build": "npm run clean && npm run build-babel",
+    "start": "npm run build && node ./build/server.js"
   },
   "repository": {
     "type": "git",
