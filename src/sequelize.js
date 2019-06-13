@@ -11,19 +11,34 @@ import ListaPrecioModel from './models/listaprecio'
 import VarianteModel from './models/variante'
 import MovimientoStockModel from './models/movimientostock'
 
-const sequelize = new Sequelize(
-  process.env.DATABASE,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    pool: {
-      max: 10,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    }
+var sequelize = null
+
+if (process.env.HEROKU_POSTGRESQL_BRONZE_URL) {
+  // the application is executed on Heroku ... use the postgres database
+  sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_BRONZE_URL, {
+    dialect:  'postgres',
+    protocol: 'postgres',
+    port:     match[4],
+    host:     match[3],
+    logging:  true //false
   })
+} else {
+  // the application is executed on the local machine ... use mysql  
+  sequelize = new Sequelize(
+    process.env.DATABASE,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD, {
+      host: process.env.DB_HOST,
+      dialect: 'postgres',
+      pool: {
+        max: 10,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      }
+    })
+}
+
 
 const Usuario = UsuarioModel(sequelize, Sequelize)
 const ArticuloGenero = sequelize.define('articulo_genero', {})
