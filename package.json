@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev-start": "babel-watch src/server.js",
+    "dev-start": "babel-node src/server.js",
     "build-babel": "babel -d ./build ./src -s",
     "clean": "rm -rf build && mkdir build",
     "build": "npm run clean && npm run build-babel",
