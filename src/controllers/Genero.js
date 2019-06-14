@@ -32,36 +32,41 @@ const GeneroController = {
    */
 
   async eliminar(req, res) {
-    
+
     Genero.update(
-      {activo: false,
-      usuarioId: req.user.id},
-      {returning: true, where: {"id":req.params.id}}
+      {
+        activo: false,
+        usuarioId: req.user.id
+      },
+      { returning: true, where: { "id": req.params.id } }
     )
-    .then( genero => {
-      if (genero[0]==0){
-        return res.status(400).json({"message":"Genero inexistente"})
-      }
-      return res.status(200).json(genero[1][0])})
-    .catch( error => res.status(400).json(error))
-       
+      .then(genero => {
+        if (genero[0] == 0) {
+          return res.status(400).json({ "message": "Genero inexistente" })
+        }
+        return res.status(200).json(genero[1][0])
+      })
+      .catch(error => res.status(400).json(error))
+
   },
   async editar(req, res) {
-    
+
     Genero.update(
-      {nombre: req.body.nombre,
-      usuarioId: req.user.id},
-      {returning: true, where: {"id":req.params.id}}      
+      {
+        nombre: req.body.nombre,
+        usuarioId: req.user.id
+      },
+      { returning: true, where: { "id": req.params.id } }
     )
-    .then( genero => {
-      if (genero[0]==0){
-        console.log(genero[0])
-        return res.status(400).json({"message":"Categoría inexistente."})
-      }
-      return res.status(200).json(genero[1][0])
-    })
-    .catch( error => res.status(400).json(error))
-       
+      .then(genero => {
+        if (genero[0] == 0) {
+          console.log(genero[0])
+          return res.status(400).json({ "message": "Categoría inexistente." })
+        }
+        return res.status(200).json(genero[1][0])
+      })
+      .catch(error => res.status(400).json(error))
+
   },
   /**
    * Traer Articulo
@@ -72,25 +77,26 @@ const GeneroController = {
 
   async getOne(req, res) {
     Genero.findOne({
-      where:{id: req.params.id}})
-    .then( genero => {
-      return res.status(200).json(genero)
+      where: { id: req.params.id }
     })
-    .catch(error => {return res.status(400).json(error.name)})
+      .then(genero => {
+        return res.status(200).json(genero)
+      })
+      .catch(error => { return res.status(400).json(error.name) })
   },
-/**
-   * Traer Articulos
-   * @param {object} req 
-   * @param {object} res
-   * @returns {object} reflection object 
-   */
+  /**
+     * Traer Articulos
+     * @param {object} req 
+     * @param {object} res
+     * @returns {object} reflection object 
+     */
 
   async getAll(req, res) {
-    Genero.findAll()
-    .then(generos => {
-      return res.status(200).json(generos)
-    })
-    .catch(error => { return res.status(400).json(error.name)})
+    Genero.findAll({where:{ activo: true}})
+      .then(generos => {
+        return res.status(200).json(generos)
+      })
+      .catch(error => { return res.status(400).json(error.name) })
 
   }
 };

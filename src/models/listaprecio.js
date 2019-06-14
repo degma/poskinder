@@ -10,7 +10,7 @@ module.exports = (sequelize, type) => {
         validaFrom: type.DATE,
         validaTO: type.DATE,
         activo: {
-          defaultValue: false,
+          defaultValue: true,
           type: type.BOOLEAN
         }
     })
