@@ -68,7 +68,9 @@ const UsuarioController = {
       console.log("[" + usuario.email + "] login correcto");
       return res.status(200).send({ token: token, userId: usuario.id });
     })
-    .catch( error => res.status(400).json(error))
+    .catch( error => {
+      console.log(error)
+      return res.status(400).json(error)})
     
     
   },
