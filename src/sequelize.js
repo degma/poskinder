@@ -78,7 +78,7 @@ Genero.belongsTo(Usuario);
 Precio.belongsTo(Usuario);
 Variante.belongsTo(Usuario);
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
   .then(() => {
     console.log(`Database ${process.env.DATABASE} => tables created!`)
   })
