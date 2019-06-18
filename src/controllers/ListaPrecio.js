@@ -21,7 +21,7 @@ const ListaPrecioController = {
         res.status(200).json(listaprecio);
       })
       .catch(error =>
-        res.status(400).json({ message: error.name }) 
+        res.status(400).json({ message: error }) 
       );
   },
   /**

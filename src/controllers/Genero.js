@@ -54,6 +54,7 @@ const GeneroController = {
     Genero.update(
       {
         nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
         usuarioId: req.user.id
       },
       { returning: true, where: { "id": req.params.id } }
@@ -61,7 +62,7 @@ const GeneroController = {
       .then(genero => {
         if (genero[0] == 0) {
           console.log(genero[0])
-          return res.status(400).json({ "message": "Categoría inexistente." })
+          return res.status(400).json({ "message": "Genero inexistente." })
         }
         return res.status(200).json(genero[1][0])
       })

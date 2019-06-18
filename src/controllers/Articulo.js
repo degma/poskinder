@@ -17,6 +17,7 @@ const ArticuloController = {
    * @returns {object} reflection object
    */
   async crear(req, res) {
+
     if (!req.body.nombre || !req.body.precio || !req.body.listaprecioId) {
       return res.status(400).send({ message: "Verificar que no falten datos" });
     }
@@ -165,7 +166,7 @@ const ArticuloController = {
                 console.log(req.body.generoId);
                 art
                   .addGeneros(req.body.generoId)
-                  .then(() => {
+                  .then(() => {                    
                     Precio.update(
                       {
                         precio: req.body.precio
