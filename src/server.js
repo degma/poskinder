@@ -50,6 +50,7 @@ app.delete('/api/v1/color/:id', Auth.verifyToken, ColorController.eliminar);
 //fabricantes
 app.post('/api/v1/fabricante', Auth.verifyToken, FabricanteController.crear);
 app.get('/api/v1/fabricante', FabricanteController.getAll);
+app.get('/api/v1/fabricante/:id', FabricanteController.getOne);
 app.put('/api/v1/fabricante/:id', Auth.verifyToken, FabricanteController.editar);
 app.delete('/api/v1/fabricante/:id', Auth.verifyToken, FabricanteController.eliminar);
 

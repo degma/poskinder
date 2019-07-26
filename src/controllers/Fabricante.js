@@ -1,4 +1,4 @@
-import { Fabricante } from "../sequelize";
+import { Fabricante, Precio, ListaPrecio, Articulo, Categoria } from "../sequelize";
 
 const FabricanteController = {
   /**
@@ -91,13 +91,36 @@ const FabricanteController = {
 
   async getOne(req, res) {
     Fabricante.findOne({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
+      attributes: [ 'id', 'nombre'],
+      include: [{
+        model: Articulo,
+        attributes: [ 'id', 'nombre', 'descripcion'],
+        where: { activo: true },
+        include: [ {
+          model: Precio,
+          attributes: [ 'precio'],
+          include: [{
+            model: ListaPrecio,
+            attributes: [ 'id', 'nombre'],
+            where: {activo: true
+            }}]}, {
+              model: Categoria,
+              attributes: [ 'id', 'nombre'],
+            } ]
+      }]      
     })
       .then(fabricante => {
         return res.status(200).json(fabricante)
       })
-      .catch(error => { return res.status(400).json(error.name) })
+      .catch(error => { 
+        console.log(error)
+        return res.status(400).json(error) 
+      })
   },
+  
+  // Fabricante -> Articulo -> Precio -> Lista de Precio
+
   /**
      * Traer Articulos
      * @param {object} req 
@@ -110,7 +133,7 @@ const FabricanteController = {
       .then(fabricantes => {
         return res.status(200).json(fabricantes)
       })
-      .catch(error => { return res.status(400).json(error.name) })
+      .catch(error => { return res.status(400).json(error) })
 
   }
 };

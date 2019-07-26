@@ -64,6 +64,13 @@ Articulo.belongsTo(Usuario);
 Articulo.belongsTo(Fabricante);
 Articulo.belongsTo(Categoria);
 
+Fabricante.hasMany(Articulo);
+
+Precio.belongsTo(Articulo);
+Precio.belongsTo(ListaPrecio);
+Articulo.hasMany(Precio)
+ListaPrecio.hasMany(Precio)
+
 MovimientoStock.belongsTo(Usuario);
 MovimientoStock.belongsTo(Variante);
 
